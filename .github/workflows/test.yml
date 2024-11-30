@@ -1,24 +1,17 @@
-name: Run Tests
-
-on:
-  push:
-
+name: Pytest
+on: [push]
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Python Setup
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v2
+      - name: Install pipenv
+        run: pipx install pipenv  
+      - name: Set up pipenv
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
-
-      - name: Setup Poetry
-        uses: Gr1N/setup-poetry@v8
-
-      - name: Run poetry install
-        run: poetry install
-
-      - name: Run tests
-        run: poetry run python -m pytest
+          python-version: "3.9"
+          cache: "pipenv"
+      - run: pipenv install
+      - name: Test with pytest
+        run: pipenv run pytest -v -s
